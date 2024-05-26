@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: software.amazon.awssdk:arns:2.25.27" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="software.amazon.awssdk" artifactId="arns" version="2.25.27" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/software.amazon.awssdk/arns/2.25.27/8e0b0027ce08e0a4fd339ebe07e54e6a90f3e7/arns-2.25.27.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/software.amazon.awssdk/arns/2.25.27/6ce0a51b55f0469d501d5e09f784771cd2da3dd9/arns-2.25.27-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: de.regnis.q.sequence:sequence-library:1.0.4" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="de.regnis.q.sequence" artifactId="sequence-library" version="1.0.4" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.regnis.q.sequence/sequence-library/1.0.4/b623e7e429e446ef36c7fd649647586ed49f16aa/sequence-library-1.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.regnis.q.sequence/sequence-library/1.0.4/da6b2c1552b9903fc506d34830a759160a9f67dc/sequence-library-1.0.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

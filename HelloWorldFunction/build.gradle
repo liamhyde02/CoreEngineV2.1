@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    maven {
+        url "https://repo.maven.apache.org/maven2"
+    }
+}
+
+dependencies {
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.2'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
+    testImplementation 'junit:junit:4.13.2'
+    implementation 'org.json:json:20210307'
+    implementation 'org.kohsuke:github-api:1.122'
+    implementation 'org.tmatesoft.svnkit:svnkit:1.10.1'
+    implementation 'com.github.javaparser:javaparser-core:3.25.6'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
+    implementation 'software.amazon.awssdk:s3:2.25.27'
+    implementation 'net.sourceforge.plantuml:plantuml:8059'
+}
+
+sourceCompatibility = 17
+targetCompatibility = 17
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+
+//
+//tasks.jar {
+//    manifest {
+//        attributes["Main-Class"] = "org.helloworld.App"
+//    }
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    from("src/main/resources/bin") {
+//        into("bin")
+//    }
+//}

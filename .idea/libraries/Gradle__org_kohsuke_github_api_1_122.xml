@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.kohsuke:github-api:1.122" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.kohsuke" artifactId="github-api" version="1.122" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.kohsuke/github-api/1.122/95030839357690ed4bdc3ff37f13e9b2147ef3e6/github-api-1.122.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.kohsuke/github-api/1.122/71d47b7986ecacf1f31a735244cb0425007fd3ba/github-api-1.122-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
