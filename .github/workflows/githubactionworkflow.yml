@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "Using Repository URL: $REPO_URL"
           echo "Using Branch Name: $BRANCH_NAME"
-          PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
+          PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: https://github.com/liamhyde02/CoreEngineV2.1}')
           echo "Payload: $PAYLOAD"
           aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json
           cat response.json
