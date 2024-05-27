@@ -56,7 +56,7 @@ jobs:
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
+          script: >
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
             script: |
