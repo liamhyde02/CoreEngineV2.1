@@ -61,7 +61,7 @@ jobs:
           script: |
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
-            if (context.payload.pull_request) {
+            if (context.payload && context.payload.pull_request) {
               github.rest.issues.createComment({
                 issue_number: context.payload.pull_request.number,
                 owner: context.repo.owner,
