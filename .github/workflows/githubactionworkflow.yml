@@ -24,13 +24,13 @@ jobs:
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
           echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
-          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-      
+          echo "Repository URL: ${{ github.repositoryUrl }}"
+
       - name: Invoke Lambda function
         id: invoke_lambda
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+          REPO_URL="${{ github.repositoryUrl }}"
           echo "Branch Name: $BRANCH_NAME"
           echo "Repository URL: $REPO_URL"
           PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
