@@ -45,7 +45,7 @@ jobs:
           echo "Payload: $FINAL_PAYLOAD"
           aws lambda invoke --function-name Core-Engine-Docker --payload "$FINAL_PAYLOAD" response.json --cli-binary-format raw-in-base64-out
           cat response.json
-          S3_LINK=$(cat response.json | jq -r '.body | fromjson | ."S3 Link"')
+          S3_LINK=$(cat response.json | jq -r '.body')
           S3_LINK=$(echo $S3_LINK | sed 's:/*$::')  # Remove trailing slashes
           echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
       
