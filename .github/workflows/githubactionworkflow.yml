@@ -59,16 +59,24 @@ jobs:
           script: |
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
-            if (context.payload.pull_request) {
-              await github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `Here is the S3 link: ${s3Link}`
-              });
-            } else {
-              console.log(`Pushed to branch: ${context.ref}. S3 link: ${s3Link}`);
-            }
+            script: |
+              const { Octokit } = require("@octokit/core");
+              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+              const s3Link = process.env.S3_LINK;
+              console.log(`S3_LINK from env: ${s3Link}`);
+              if (context.payload.pull_request) {
+                await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: `Here is the S3 link: ${s3Link}`,
+                  headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                  }
+                });
+              } else {
+                console.log(`Pushed to branch: ${context.ref}. S3 link: ${s3Link}`);
+              }
 
 
       - name: Process link for workflow dispatch
