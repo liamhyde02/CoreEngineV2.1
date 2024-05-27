@@ -1,0 +1,44 @@
+name: Call AWS Lambda and Comment S3 Link
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+
+jobs:
+  call-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Replace with your region
+
+      - name: Invoke Lambda function
+        id: invoke_lambda
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          REPO_URL=${{ github.repository.html_url }}
+          PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
+          RESPONSE=$(aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json --query 'Payload' --output text)
+          S3_LINK=$(cat response.json | jq -r '.body')
+          echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const s3Link = process.env.S3_LINK;
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Here is the S3 link: ${s3Link}`
+            });
