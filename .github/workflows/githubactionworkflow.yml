@@ -19,18 +19,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Replace with your region
 
-      - name: Debug Info
+      - name: Set and Debug Environment Variables
         run: |
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
           echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
-          echo "Repository URL: ${{ github.server_url }}/${{ github.repository }}"
+          REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          echo "Repository URL: $REPO_URL"
+          echo "REPO_URL=$REPO_URL" >> $GITHUB_ENV
 
       - name: Invoke Lambda function
         id: invoke_lambda
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          REPO_URL="${{ env.REPO_URL }}"
           echo "Branch Name: $BRANCH_NAME"
           echo "Repository URL: $REPO_URL"
           PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
