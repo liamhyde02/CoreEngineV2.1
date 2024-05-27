@@ -3,10 +3,10 @@ name: Call AWS Lambda and Comment S3 Link
 on:
   push:
     branches:
-      - master  # Adjust to your branch name
+      - main  # Adjust to your branch name
   pull_request:
     branches:
-      - master  # Adjust to your branch name
+      - main  # Adjust to your branch name
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "S3_LINK: ${{ env.S3_LINK }}"
 
-      - name: Comment on PR
+      - name: Comment on PR or Push
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         uses: actions/github-script@v4
         with:
@@ -61,12 +61,16 @@ jobs:
           script: |
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
-            github.rest.issues.createComment({
-              issue_number: context.payload.pull_request.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `Here is the S3 link: ${s3Link}`
-            });
+            if (github.context.payload.pull_request) {
+              github.rest.issues.createComment({
+                issue_number: github.context.payload.pull_request.number,
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                body: `Here is the S3 link: ${s3Link}`
+              });
+            } else {
+              console.log(`Pushed to branch: ${github.context.ref}. S3 link: ${s3Link}`);
+            }
 
       - name: Process link for workflow dispatch
         if: github.event_name == 'workflow_dispatch'
