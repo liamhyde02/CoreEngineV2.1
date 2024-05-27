@@ -19,14 +19,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Replace with your region
 
+      - name: Debug Info
+        run: |
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
+          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+      
       - name: Invoke Lambda function
         id: invoke_lambda
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+          echo "Branch Name: $BRANCH_NAME"
+          echo "Repository URL: $REPO_URL"
           PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
           echo "Payload: $PAYLOAD"
           aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json
+          cat response.json
           S3_LINK=$(cat response.json | jq -r '.body')
           echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
 
