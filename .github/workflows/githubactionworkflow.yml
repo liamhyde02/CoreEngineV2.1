@@ -53,32 +53,18 @@ jobs:
 
       - name: Comment on PR or Push
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: >
-            const s3Link = process.env.S3_LINK;
-            console.log(`S3_LINK from env: ${s3Link}`);
-            script: |
-              const { Octokit } = require("@octokit/core");
-              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-              const s3Link = process.env.S3_LINK;
-              console.log(`S3_LINK from env: ${s3Link}`);
-              if (context.payload.pull_request) {
-                await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.pull_request.number,
-                  body: `Here is the S3 link: ${s3Link}`,
-                  headers: {
-                    'X-GitHub-Api-Version': '2022-11-28'
-                  }
-                });
-              } else {
-                console.log(`Pushed to branch: ${context.ref}. S3 link: ${s3Link}`);
-              }
-
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          S3_LINK: ${{ env.S3_LINK }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+            curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository_owner }}/${{ github.repository }}/issues/$PR_NUMBER/comments \
+              -d "{\"body\": \"Here is the S3 link: $S3_LINK\"}"
+          else
+            echo "Pushed to branch: $GITHUB_REF. S3 link: $S3_LINK"
 
       - name: Process link for workflow dispatch
         if: github.event_name == 'workflow_dispatch'
