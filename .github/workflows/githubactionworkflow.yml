@@ -3,7 +3,8 @@ name: Call AWS Lambda and Comment S3 Link
 on:
   push:
     branches:
-      - main  # Trigger on pushes to the main branch
+      - main  # Adjust to your branch name
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   call-lambda:
@@ -17,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Replace with your region
+          aws-region: us-east-1  # Adjust to your region
 
       - name: Set and Debug Environment Variables
         run: |
