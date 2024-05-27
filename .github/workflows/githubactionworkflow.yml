@@ -3,7 +3,7 @@ name: Call AWS Lambda and Comment S3 Link
 on:
   push:
     branches:
-      - master  # Trigger on pushes to the main branch
+      - main  # Trigger on pushes to the main branch
 
 jobs:
   call-lambda:
@@ -25,7 +25,8 @@ jobs:
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           REPO_URL=${{ github.repository.html_url }}
           PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
-          RESPONSE=$(aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json --query 'Payload' --output text)
+          echo "Payload: $PAYLOAD"
+          aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json
           S3_LINK=$(cat response.json | jq -r '.body')
           echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
 
