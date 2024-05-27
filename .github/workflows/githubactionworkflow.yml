@@ -68,7 +68,6 @@ jobs:
                 repo: context.repo.repo,
                 body: `Here is the S3 link: ${s3Link}`
               });
-            }
             } else {
               console.log(`Pushed to branch: ${github.context.ref}. S3 link: ${s3Link}`);
             }
