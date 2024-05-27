@@ -1,10 +1,8 @@
 name: Call AWS Lambda and Comment S3 Link
 
 on:
-  push:
-    branches:
-      - master  # Adjust to your branch name
   pull_request:
+    types: [closed]
     branches:
       - master  # Adjust to your branch name
   workflow_dispatch:  # Allows manual triggering of the workflow
@@ -12,6 +10,7 @@ on:
 jobs:
   call-lambda:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -45,7 +44,7 @@ jobs:
           echo "Payload: $FINAL_PAYLOAD"
           aws lambda invoke --function-name Core-Engine-Docker --payload "$FINAL_PAYLOAD" response.json --cli-binary-format raw-in-base64-out
           cat response.json
-          S3_LINK=$(cat response.json | jq -r '.body')  # Directly read the link
+          S3_LINK=$(cat response.json | jq -r '.body | fromjson | ."S3 Link"')
           S3_LINK=$(echo $S3_LINK | sed 's:/*$::')  # Remove trailing slashes
           echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
 
@@ -62,7 +61,7 @@ jobs:
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
             if (context.payload.pull_request) {
-              github.issues.createComment({
+              await github.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
