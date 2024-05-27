@@ -54,7 +54,7 @@ jobs:
       - name: Comment on PR or Push
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
           S3_LINK: ${{ env.S3_LINK }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
