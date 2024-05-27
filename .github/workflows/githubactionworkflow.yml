@@ -23,7 +23,7 @@ jobs:
         id: invoke_lambda
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          REPO_URL=${{ github.repository.html_url }}
+          REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
           echo "Payload: $PAYLOAD"
           aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json
