@@ -38,9 +38,10 @@ jobs:
         run: |
           echo "Using Repository URL: $REPO_URL"
           echo "Using Branch Name: $BRANCH_NAME"
-          PAYLOAD="{\"type\":\"github\",\"branch\":\"${BRANCH_NAME}\",\"url\":\"${REPO_URL}\"}"
-          echo "Payload: $PAYLOAD"
-          aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json
+          PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
+          PAYLOAD_ESCAPED=$(echo "$PAYLOAD" | jq -aRs .)
+          echo "Payload: $PAYLOAD_ESCAPED"
+          aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD_ESCAPED" response.json --cli-binary-format raw-in-base64-out
           cat response.json
           S3_LINK=$(cat response.json | jq -r '.body')
           echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
