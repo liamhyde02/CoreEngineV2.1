@@ -27,14 +27,16 @@ jobs:
           REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           echo "Repository URL: $REPO_URL"
           echo "REPO_URL=$REPO_URL" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Invoke Lambda function
         id: invoke_lambda
+        env:
+          REPO_URL: ${{ env.REPO_URL }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
         run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          REPO_URL="${{ env.REPO_URL }}"
-          echo "Branch Name: $BRANCH_NAME"
-          echo "Repository URL: $REPO_URL"
+          echo "Using Repository URL: $REPO_URL"
+          echo "Using Branch Name: $BRANCH_NAME"
           PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
           echo "Payload: $PAYLOAD"
           aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json
