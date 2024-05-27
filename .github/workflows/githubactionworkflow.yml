@@ -63,7 +63,7 @@ jobs:
             console.log(`S3_LINK from env: ${s3Link}`);
             if (context.payload.pull_request) {
               github.issues.createComment({
-                issue_number: context.payload.pull_request.number,
+                issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: `Here is the S3 link: ${s3Link}`
