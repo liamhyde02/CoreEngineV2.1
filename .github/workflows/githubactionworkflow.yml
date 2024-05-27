@@ -62,8 +62,7 @@ jobs:
       - name: Process link for workflow dispatch
         if: github.event_name == 'workflow_dispatch'
         run: |
-          const s3Link = process.env.S3_LINK;
-          echo "The S3 link is: $s3Link"
+          echo "The S3 link is: $S3_LINK"
           echo "##[group]S3 Link"
-          echo "URL: $s3Link"
+          echo "URL: $S3_LINK"
           echo "##[endgroup]"
