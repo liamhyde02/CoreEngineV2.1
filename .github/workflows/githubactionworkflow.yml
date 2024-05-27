@@ -40,9 +40,7 @@ jobs:
           echo "Using Branch Name: $BRANCH_NAME"
           PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
           echo "Payload: $PAYLOAD"
-          BASE64_PAYLOAD=$(echo "$PAYLOAD" | base64)
-          echo "Base64 Payload: $BASE64_PAYLOAD"
-          aws lambda invoke --function-name your-lambda-function-name --payload "$BASE64_PAYLOAD" response.json --cli-binary-format raw-in-base64-out
+          aws lambda invoke --function-name your-lambda-function-name --payload "$PAYLOAD" response.json
           cat response.json
           S3_LINK=$(cat response.json | jq -r '.body')
           echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
