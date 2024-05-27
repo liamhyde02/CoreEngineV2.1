@@ -31,7 +31,6 @@ jobs:
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Invoke Lambda function
-        id: invoke_lambda
         env:
           REPO_URL: ${{ env.REPO_URL }}
           BRANCH_NAME: ${{ env.BRANCH_NAME }}
@@ -59,3 +58,12 @@ jobs:
               repo: context.repo.repo,
               body: `Here is the S3 link: ${s3Link}`
             });
+
+      - name: Process link for workflow dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          const s3Link = process.env.S3_LINK;
+          echo "The S3 link is: $s3Link"
+          echo "##[group]S3 Link"
+          echo "URL: $s3Link"
+          echo "##[endgroup]"
