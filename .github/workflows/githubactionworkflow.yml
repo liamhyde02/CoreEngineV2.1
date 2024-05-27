@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "Using Repository URL: $REPO_URL"
           echo "Using Branch Name: $BRANCH_NAME"
-          PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: $branch, url: $url}')
+          PAYLOAD=$(jq -n --arg branch "$BRANCH_NAME" --arg url "$REPO_URL" '{type: "github", branch: "master", url: $url}')
           FINAL_PAYLOAD=$(jq -n --arg body "$PAYLOAD" '{body: $body}')
           echo "Payload: $FINAL_PAYLOAD"
           aws lambda invoke --function-name Core-Engine-Docker --payload "$FINAL_PAYLOAD" response.json --cli-binary-format raw-in-base64-out
