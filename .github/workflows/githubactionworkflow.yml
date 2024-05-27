@@ -65,6 +65,7 @@ jobs:
               -d "{\"body\": \"Here is the S3 link: $S3_LINK\"}"
           else
             echo "Pushed to branch: $GITHUB_REF. S3 link: $S3_LINK"
+          fi
 
       - name: Process link for workflow dispatch
         if: github.event_name == 'workflow_dispatch'
