@@ -54,7 +54,7 @@ jobs:
           echo "S3_LINK: ${{ env.S3_LINK }}"
 
       - name: Comment on PR
-        if: contains(['push', 'pull_request'], github.event_name)
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
