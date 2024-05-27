@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "S3_LINK: ${{ env.S3_LINK }}"
 
-      - name: Comment on PR or Push
+            - name: Comment on PR or Push
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         uses: actions/github-script@v4
         with:
@@ -61,7 +61,9 @@ jobs:
           script: |
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
-            if (context.payload && context.payload.pull_request) {
+            const { context } = require('@actions/github');
+            const github = require('@actions/github');
+            if (context.payload.pull_request) {
               github.rest.issues.createComment({
                 issue_number: context.payload.pull_request.number,
                 owner: context.repo.owner,
