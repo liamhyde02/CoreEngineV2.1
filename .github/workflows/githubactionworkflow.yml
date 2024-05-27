@@ -45,10 +45,14 @@ jobs:
           echo "Payload: $FINAL_PAYLOAD"
           aws lambda invoke --function-name Core-Engine-Docker --payload "$FINAL_PAYLOAD" response.json --cli-binary-format raw-in-base64-out
           cat response.json
-          S3_LINK=$(cat response.json | jq -r '.body')
+          S3_LINK=$(cat response.json | jq -r '.body')  # Directly read the link
           S3_LINK=$(echo $S3_LINK | sed 's:/*$::')  # Remove trailing slashes
           echo "S3_LINK=$S3_LINK" >> $GITHUB_ENV
-      
+
+      - name: Debug Environment Variables
+        run: |
+          echo "S3_LINK: ${{ env.S3_LINK }}"
+
       - name: Comment on PR or Push
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         uses: actions/github-script@v4
@@ -57,21 +61,21 @@ jobs:
           script: |
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
-            if (github.context.payload.pull_request) {
+            if (context.payload.pull_request) {
               github.rest.issues.createComment({
-                issue_number: github.context.payload.pull_request.number,
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
                 body: `Here is the S3 link: ${s3Link}`
               });
             } else {
-              console.log(`Pushed to branch: ${github.context.ref}. S3 link: ${s3Link}`);
+              console.log(`Pushed to branch: ${context.ref}. S3 link: ${s3Link}`);
             }
 
       - name: Process link for workflow dispatch
         if: github.event_name == 'workflow_dispatch'
         run: |
-          S3_LINK=${{ env.S3_LINK }}
+          echo "S3_LINK=${{ env.S3_LINK }}"
           echo "The S3 link is: $S3_LINK"
           echo "##[group]S3 Link"
           echo "URL: $S3_LINK"
