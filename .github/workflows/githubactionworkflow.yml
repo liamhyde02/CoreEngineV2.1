@@ -61,13 +61,14 @@ jobs:
           script: |
             const s3Link = process.env.S3_LINK;
             console.log(`S3_LINK from env: ${s3Link}`);
-            if (github.context.payload.pull_request) {
+            if (context.payload.pull_request) {
               github.rest.issues.createComment({
-                issue_number: github.context.payload.pull_request.number,
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
                 body: `Here is the S3 link: ${s3Link}`
               });
+            }
             } else {
               console.log(`Pushed to branch: ${github.context.ref}. S3 link: ${s3Link}`);
             }
